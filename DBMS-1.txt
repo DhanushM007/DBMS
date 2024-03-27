@@ -1,0 +1,112 @@
+create table publisher148 (pub_name varchar(20) primary key , address varchar(20) , phone integer);
+create table book148 (book_id int primary key , pub_name varchar(20) , foreign key(pub_name) references publisher148(pub_name),title varchar(20),pub_year varchar(20));
+create table book1488_author(book_id int,foreign key(book_id) references book148(book_id),author_name varchar(20));
+create table library_program1488(program_id int primary key, program_name varchar(20),address varchar(20));
+create table book1488_lending(book_id int,foreign key(book_id)references book148(book_id),cardno int primary key,date_out varchar(20),due_date varchar(20));
+create table book1488_lending1(book_id int,foreign key(book_id)references book148(book_id),cardno int ,date_out varchar(20),date_date varchar(20));
+create table book1488_copies(book_id int,foreign key(book_id)references book148(book_id),program_id int,foreign key(program_id)references library_program1488(program_id),noc int);
+
+desc publisher148;
+
+insert into publisher148 values('Shivu','bangalore',7892485939);
+insert into publisher148 values('Sinchu','bangalore',8861114958);
+insert into publisher148 values('Sanjay','bangalore',8867031886);
+insert into publisher148 values('Shreya','bangalore',8748044365);
+insert into publisher148 values('Surya','bangalore',9740807436);
+
+select * from publisher148;
+
+desc book148;
+ 
+insert into book148 values(1,'Shivu','daa','jan 2003');
+insert into book148 values(2,'Sinchu','oops','jun 2004');
+insert into book148 values(3,'Sanjay','python','aug 2005');
+insert into book148 values(4,'Shreya','os','dec 2006'); 
+insert into book148 values(5,'Surya','ds','feb 2007');
+
+select * from book148;
+
+desc book1488_author;
+
+insert into book1488_author values(1,'Kumar');
+insert into book1488_author values(2,'Rohith');
+insert into book1488_author values(3,'Shashank');
+insert into book1488_author values(4,'Sagar');
+insert into book1488_author values(5,'Tarun');
+
+select * from book1488_author;
+
+desc library_program1488;
+
+insert into library_program1488 values(10,'Student','bangalore');
+insert into library_program1488 values(20,'Teacher','bangalore');
+insert into library_program1488 values(30,'Principal','bangalore');
+insert into library_program1488 values(40,'HOD','bangalore');
+insert into library_program1488 values(50,'Data','bangalore');
+
+select * from library_program1488;
+
+desc book1488_lending;
+
+insert into book1488_lending values(1,100,'11 jan 2003','11 jan 2004');
+insert into book1488_lending values(2,200,'12 jan 2004','12 jan 2005');
+insert into book1488_lending values(3,300,'13 jan 2005','13 jan 2006');
+insert into book1488_lending values(4,400,'14 jan 2006','14 jan 2007');
+insert into book1488_lending values(5,500,'15 jan 2007','15 jan 2008');
+
+select * from book1488_lending;
+
+
+desc book1488_lending1;
+
+insert into book1488_lending1 values(1,101,'1 jan 2017','15 jan 2017');
+insert into book1488_lending1 values(2,101,'1 feb 2017','15 feb 2017');
+insert into book1488_lending1 values(3,101,'1 mar 2017','15 mar 2017');
+insert into book1488_lending1 values(4,101,'1 jun 2017','15 jun 2017');
+insert into book1488_lending1 values(5,101,'1 jul 2017','15 jul 2017');
+insert into book1488_lending1 values(1,102,'1 jul 2017','15 jul 2017');
+insert into book1488_lending1 values(2,102,'1 jul 2017','15 jul 2017');
+insert into book1488_lending1 values(3,102,'1 jul 2017','15 jul 2017');
+insert into book1488_lending1 values(4,102,'1 jul 2017','15 jul 2017');
+insert into book1488_lending1 values(5,102,'1 jul 2017','15 jul 2017');
+
+select * from book1488_lending1;
+
+desc book1488_copies;
+
+insert into book1488_copies values(1,10,1000);
+insert into book1488_copies values(2,20,2000);
+insert into book1488_copies values(3,30,3000);
+insert into book1488_copies values(4,40,4000);
+insert into book1488_copies values(5,50,5000);
+
+select * from book1488_copies;
+
+select b.book_id,b.title,b.pub_name,a.author_name,c.noc,l.program_id from book148 b, book1488_author a,book1488_copies c,library_program1488 l where b.book_id=a.book_id and b.book_id=c.book_id and l.program_id=c.program_id;
+
+select cardno from book1488_lending1 where date_out between '1 jan 2017' and '15 jul 2017' group by cardno having count (*) > 3; 
+
+delete from book1488_author where book_id = 4;
+delete from book1488_lending1 where book_id = 4;
+delete from book1488_copies where book_id = 4;
+delete from book1488_lending where book_id = 4;
+delete from book148 where book_id = 4;
+
+select * from book1488_author;
+select * from book1488_lending1;
+select * from book1488_copies;
+select * from book1488_lending;
+select * from book148;
+
+select * from book148;
+
+create view publication as
+select pub_year from book148;
+
+select * from publication;
+
+
+
+create view v_bookss as select b.book_id,b.title,c.noc,l.program_id from book148 b,book1488_copies c,library_program1488 l where b.book_id=c.book_id and l.program_id=c.program_id;
+
+select * from v_bookss;

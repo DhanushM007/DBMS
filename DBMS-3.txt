@@ -1,0 +1,71 @@
+create table actor148(act_id number(3),act_name varchar(20),act_gender char(1),primary key(act_id));
+create table director148(dir_id number(3),dir_name varchar(20),dir_phone number(10),primary key(dir_id));
+create table movies148(mov_id number(4) primary key,mov_title varchar(25),mov_year varchar(20),mov_lang varchar(12),dir_id number(3),foreign key(dir_id) references director148(dir_id) on delete set null);
+create table movie_cast148(act_id number(3),mov_id number(4),role varchar(10),primary key(act_id,mov_id),foreign key(act_id) references actor148(act_id),foreign key(mov_id) references movies148(mov_id) on delete set null);
+create table rating148(mov_id number(4),rev_stars varchar(25),primary key(mov_id), foreign key(mov_id) references movies148(mov_id) on delete set null);
+
+desc actor148;
+
+insert into actor148 values(301,'Shivu','M');
+insert into actor148 values(302,'Sanjay','M');
+insert into actor148 values(303,'Sinchu','F');
+insert into actor148 values(304,'Shreya','F');
+
+select*from actor148;
+
+desc director148;
+
+insert into director148 values(60,'Raja Mouli',7892485939);
+insert into director148 values(61,'Hit Chock',8197079609);
+insert into director148 values(62,'Faran',8861114958);
+insert into director148 values(63,'Steven splielberg',8867031886);
+
+select*from director148;
+
+desc movies148;
+
+insert into movies148 values(1001,'Bahubali-2',2017,'Telgu',60);
+insert into movies148 values(1002,'Bahubali-1',2015,'Telgu',60);
+insert into movies148 values(1003,'Akash',2008,'kannada',61);
+insert into movies148 values(1004,'War House',2011,'English',63);
+
+select*from movies148;
+
+desc movie_cast148;
+
+insert into movie_cast148 values(301,1002,'hero');
+insert into movie_cast148 values(301,1001,'hero');
+insert into movie_cast148 values(303,1003,'heroine');
+insert into movie_cast148 values(304,1002,'guest');
+insert into movie_cast148 values(302,1004,'hero');
+
+select*from movie_cast148;
+
+desc rating148;
+
+insert into rating148 values(1001,4);
+insert into rating148 values(1002,2);
+insert into rating148 values(1003,5);
+insert into rating148 values(1004,4);
+
+select*from rating148;
+
+
+
+1)   select mov_title from movies148 where dir_id in(select dir_id from director148 where dir_name = 'Hit Chock');
+
+
+2)   select mov_title from movies148 m,movie_cast148 mv where m.mov_id=mv.mov_id and act_id in(select act_id from movie_cast148 group by act_id having count (act_id)>1) group by mov_title having count(*)>1;
+
+    
+3)   select act_name,mov_title,mov_year from actor148 a join movie_cast148 c on a.act_id=c.act_id join movies148 m on c.mov_id=m.mov_id where m.mov_year not between 2000 and 2015;
+
+                                                     [OR]
+
+3)    select a.act_name,c.mov_title,c.mov_year from actor148 a,movie_cast148 b,movies148 c where a.act_id=b.act_id and b.mov_id = c.mov_id and c.mov_year not between 2000 and 2015;
+
+
+4)    select mov_title,max(rev_stars)from movies148 inner join rating148 using(mov_id)group by mov_title having max(rev_stars)>0 order by mov_title;
+
+
+5)    update rating148 set rev_stars = 5 where mov_id in (select mov_id from movies148 where dir_id in (select dir_id from director148 where dir_name = 'Steven splielberg'));
